@@ -1,4 +1,14 @@
 import { env } from '@/env'
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
+// import { Resend } from 'resend'
 
-export const resend = new Resend(env.RESEND_API_KEY)
+// export const resend = new Resend(env.RESEND_API_KEY)
+export const mail = nodemailer.createTransport({
+  service: 'gmail',
+  port: 587,
+  secure: true,
+  auth: {
+    user: env.MAIL_USER,
+    pass: env.MAIL_PASS,
+  },
+})

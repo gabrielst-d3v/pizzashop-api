@@ -2,10 +2,11 @@ import Elysia, { t } from 'elysia'
 import { db } from '@/db/connection'
 import { authLinks } from '@/db/schema'
 import { createId } from '@paralleldrive/cuid2'
-// import { resend } from '@/mail/client'
-// import { AuthenticationMagicLinkTemplate } from '@/mail/templates/authentication-magic-link'
+import ReactDOMServer from 'react-dom/server'
 import { env } from '@/env'
 import { UnauthorizedError } from './errors/unauthorized-error'
+import { mail } from '@/mail/client'
+import { AuthenticationMagicLinkTemplate } from '@/mail/templates/authentication-magic-link'
 
 export const sendAuthenticationLink = new Elysia().post(
   '/authenticate',
@@ -33,9 +34,21 @@ export const sendAuthenticationLink = new Elysia().post(
     authLink.searchParams.set('code', authLinkCode)
     authLink.searchParams.set('redirect', env.AUTH_REDIRECT_URL)
 
-    console.log(authLink.toString())
+    const htmlContent = ReactDOMServer.renderToStaticMarkup(
+      AuthenticationMagicLinkTemplate({
+        userEmail: email,
+        authLink: authLink.toString(),
+      }),
+    )
 
-    // await resend.emails.send({
+    await mail.sendMail({
+      from: 'Pizza Shop <naoresponda@fala.dev>',
+      to: email,
+      subject: '[Pizza Shop] Link para login',
+      html: htmlContent,
+    })
+
+    // await Resend.emails.send({
     //   from: 'Pizza Shop <naoresponda@fala.dev>',
     //   to: email,
     //   subject: '[Pizza Shop] Link para login',
