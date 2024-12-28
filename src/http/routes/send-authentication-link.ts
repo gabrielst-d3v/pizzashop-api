@@ -44,7 +44,7 @@ export const sendAuthenticationLink = new Elysia().post(
     await mail.sendMail({
       from: 'Pizza Shop <naoresponda@fala.dev>',
       to: email,
-      subject: '[Pizza Shop] Link para login',
+      subject: '🍕 [Pizza Shop] Link para login',
       html: htmlContent,
     })
 

@@ -4,8 +4,8 @@ import nodemailer from 'nodemailer'
 
 // export const resend = new Resend(env.RESEND_API_KEY)
 export const mail = nodemailer.createTransport({
-  service: 'gmail',
-  port: 587,
+  host: 'smtp.gmail.com',
+  port: 465,
   secure: true,
   auth: {
     user: env.MAIL_USER,
